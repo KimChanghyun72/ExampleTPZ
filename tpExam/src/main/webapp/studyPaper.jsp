@@ -111,8 +111,12 @@ body {
 	}
 }
 </style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.css"/> 
+<script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
 <script>
+$(function(){
+	 $("#foo-table").DataTable();
+})
 <c:forEach items="${problemList}" var="list">
 $(function(){
 	$("input[name=problem${list.problem_id}]").on("change", function(){
@@ -130,21 +134,6 @@ $(function(){
 			}
 		}
 	});
-	
-	
-	/* $("input[name='problem${list.problem_id}']").on("change", function(){
-		var val=0;
-		for(var i=0; i<4; i++){
-			if($("input[name='problem${list.problem_id}']").eq(i).prop("checked")){
-				val=$("input[name='problem${list.problem_id}']").eq(i).val()
-		}
-			$("[value=val]").prop("checked",true);
-		}
-		$("[value]")
-						
-		})
-		$(this).val() */
-		//$("[name=answer${list.problem_id}]").prop("checked",$("[name=problem${list.problem_id}]")); 
 	});
 
 </c:forEach>
@@ -152,17 +141,64 @@ $(function(){
 </script>
 </head>
 <body>
-
 	<div class="header">
 		<h1>Header</h1>
-
 	</div>
-
+<div class="leftcolumn">
+<table id="foo-table" class="table table-bordered">
+		<thead>
+			<tr><th>문제</th><th>지역선택</th></tr>
+		</thead>
+		<tbody>
+		
+			<tr><td>1</td><td>서울</td></tr>
+			<tr><td>2</td><td>경기도</td></tr>
+			<tr><td>3</td><td>충청남도</td></tr>
+			<tr><td>4</td><td>충청북도</td></tr>
+			<tr><td>5</td><td>전라남도</td></tr>
+			<tr><td>6</td><td>전라북도</td></tr>
+			<tr><td>7</td><td>경상남도</td></tr>
+			<tr><td>8</td><td>경상북도</td></tr>
+			<tr><td>9</td><td>강원도</td></tr>
+			<tr><td>10</td><td>제주도</td></tr>
+			<tr><td>99</td><td>해외</td></tr>
+		</tbody>
+    </table>
+    
+</div>
+<div class="rightcolumn">
+			<div class="card">
+				<h3>정답확인</h3>0
+				<div class="fakeimg">
+					<table>
+						<tbody>
+							<c:forEach items="${problemList}" var="list">
+								<tr>
+									<td>1<input type="radio" name="answer${list.problem_id}" value="1"></td>
+									<td>2<input type="radio" name="answer${list.problem_id}" value="2"></td>
+									<td>3<input type="radio" name="answer${list.problem_id}" value="3"></td>
+									<td>4<input type="radio" name="answer${list.problem_id}" value="4"></td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+				</div>
+				<div class="fakeimg"></div>
+			</div>
+			</div>
 	<div class="row">
 		<div class="leftcolumn">
 			<div class="card">
+			<table id="foo-table" class="table table-bordered">
+				<thead>
+			<tr>
+			<th>문제</th>
+			</tr>
+		</thead>
+				<tbody>
 				<c:forEach items="${problemList}" var="list">
-					<div></div>
+					<tr>
+					<td>
 					<div>${list.problem_image}</div>
 					<div>${list.problem_text}</div>
 					<div>
@@ -174,8 +210,11 @@ $(function(){
 					<div>
 						<input type="radio" name="problem${list.problem_id}" value="4">${list.ans_4}</div>
 					<div>${list.haeseol}</div>
-					<br>
+					</td>
+					</tr>
 				</c:forEach>
+				</tbody>
+				</table>
 			</div>
 		</div>
 		<div class="rightcolumn">

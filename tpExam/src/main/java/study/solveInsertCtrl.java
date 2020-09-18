@@ -32,10 +32,10 @@ public class solveInsertCtrl implements Controller {
 		//기본키 삽입, type_cd와 round는 그대로임
 		paperheadVO = PaperheadDAO.getInstance().selectOne(paperheadVO);
 		
-		System.out.println( "페이퍼헤드아디"+paperheadVO.getPaperhead_id()+paperheadVO.getPaper_type_cd()+paperheadVO.getPaper_round());
+		/*System.out.println( "페이퍼헤드아디"+paperheadVO.getPaperhead_id()+paperheadVO.getPaper_type_cd()+paperheadVO.getPaper_round());
 		//응시 insert
 		SolveDAO.getInstance().insert(paperheadVO.getPaper_type_cd(), solve_cnt);
-		
+		*/
 		//선택기준에 맞는 문제 selectAll
 		ArrayList<ProblemVO> problemList = ProblemDAO.getInstance().selectByType(paperheadVO.getPaperhead_id());
 		
