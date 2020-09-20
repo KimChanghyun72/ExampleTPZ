@@ -21,7 +21,7 @@ public class ProblemDAO {
 		return instance;
 	}
 	
-	public ArrayList<ProblemVO> selectByType(String paperhead_id) {
+	public ArrayList<ProblemVO> selectByType() {
 		ProblemVO resultVO = null;
 		ArrayList<ProblemVO> list = new ArrayList<ProblemVO>();
 		
@@ -29,9 +29,8 @@ public class ProblemDAO {
 			conn = ConnectionManager.getConnnect();
 			String sql = " SELECT problem_id, subject, haeseol, problem_text, ans_1, ans_2, ans_3, ans_4, "
 					+ " ans_correct, paperhead_id, problem_image "
-					+ " FROM problem where paperhead_id = ?";
+					+ " FROM problem";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, paperhead_id);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				resultVO = new ProblemVO();

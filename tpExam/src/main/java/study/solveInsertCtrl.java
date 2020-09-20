@@ -37,7 +37,7 @@ public class solveInsertCtrl implements Controller {
 		SolveDAO.getInstance().insert(paperheadVO.getPaper_type_cd(), solve_cnt);
 		*/
 		//선택기준에 맞는 문제 selectAll
-		ArrayList<ProblemVO> problemList = ProblemDAO.getInstance().selectByType(paperheadVO.getPaperhead_id());
+		ArrayList<ProblemVO> problemList = ProblemDAO.getInstance().selectByType();
 		
 		System.out.println("문제내역"+problemList);
 		request.setAttribute("problemList", problemList);

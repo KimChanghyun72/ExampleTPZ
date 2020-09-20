@@ -1,3 +1,5 @@
+<%@page import="model.ProblemVO"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -110,6 +112,20 @@ body {
 		width: 100%;
 	}
 }
+
+.haeseol {
+	visibility:hidden;
+}
+.probChk {
+	visibility:hidden;
+}
+ #scoreFrm, .pre-submitBtn{
+ 	visibility:hidden;
+}
+ .after-Scoring{
+ 	visibility:hidden;
+ }
+ 
 </style>
 <link rel="stylesheet" href="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.css"/> 
 <script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
@@ -134,107 +150,109 @@ $(function(){
 			}
 		}
 	});
-	});
-
+});
 </c:forEach>
+<%
+ArrayList<ProblemVO> problemList = (ArrayList<ProblemVO>)request.getAttribute("problemList");
+int probNum;  //문제 번호
+int ansNum;  //오른쪽 문제번호
+%>
+
+$(function(){                               //제출버튼 누르면 팝업 + 답안표시
+	$(".Scoring").on("click", function(){
+		alert("제출하시겠습니까?");
+		 <c:forEach items="${problemList}" var="list">
+			if($("[name=answer${list.problem_id}]:checked").val()==${list.ans_correct}){
+				$(".ansNum${list.problem_id}").html($(".ansNum${list.problem_id}").html()+"/O");  //답지부분에 정답표시
+				$("[name=problem${list.problem_id}]").closest("tr").children().eq(1).html($("[name=problem${list.problem_id}]").closest("tr").children().eq(1).html()+" 정답")
+			}else{
+				$(".ansNum${list.problem_id}").html($(".ansNum${list.problem_id}").html()+"/X");  //답지부분에 정답표시
+				$("[name=problem${list.problem_id}]").closest("tr").children().eq(1).html($("[name=problem${list.problem_id}]").closest("tr").children().eq(1).html()+" 오답")
+			}
+			$(".haeseol").removeClass();  //해설 나오게 함
+			$(".probChk").removeClass();  //체크버튼 나오게 함
+			$(".Scoring").removeClass().addClass("after-Scoring");  // 제출버튼 숨김
+			$(".pre-submitBtn").removeClass().addClass("submitBtn");  //확인버튼 생성
+		 </c:forEach>
+		
+	})
+});
+//카운트 시간 표시.
+var SetTime = 1800;		// 최초 설정 시간(기본 : 초)
+function msg_time() {	// 1초씩 카운트
+	m = Math.floor(SetTime / 60) + "분 " + (SetTime % 60) + "초";	// 남은 시간 계산
+	var msg = "현재 남은 시간은 <font color='red'>" + m + "</font> 입니다.";
+	document.all.ViewTimer.innerHTML = msg;		// div 영역에 보여줌 
+	SetTime--;					// 1초씩 감소
+	if (SetTime < 0) {			// 시간이 종료 되었으면..
+		clearInterval(tid);		// 타이머 해제
+		alert("종료");
+	}
+}
+window.onload = function TimerStart(){ tid=setInterval('msg_time()',1000) };
+
 
 </script>
 </head>
 <body>
 	<div class="header">
 		<h1>Header</h1>
+			<div id="ViewTimer"></div>
 	</div>
 <div class="leftcolumn">
 <table id="foo-table" class="table table-bordered">
+		
 		<thead>
-			<tr><th>문제</th><th>지역선택</th></tr>
+			<tr><th>과목</th><th>번호</th><th>문제</th></tr>
 		</thead>
 		<tbody>
-		
-			<tr><td>1</td><td>서울</td></tr>
-			<tr><td>2</td><td>경기도</td></tr>
-			<tr><td>3</td><td>충청남도</td></tr>
-			<tr><td>4</td><td>충청북도</td></tr>
-			<tr><td>5</td><td>전라남도</td></tr>
-			<tr><td>6</td><td>전라북도</td></tr>
-			<tr><td>7</td><td>경상남도</td></tr>
-			<tr><td>8</td><td>경상북도</td></tr>
-			<tr><td>9</td><td>강원도</td></tr>
-			<tr><td>10</td><td>제주도</td></tr>
-			<tr><td>99</td><td>해외</td></tr>
+		<% for(probNum=0; probNum<problemList.size(); probNum++){ %>
+			<tr>
+				<td><%=problemList.get(probNum).getSubject() %>
+				<td class="probNum<%=probNum %>"><%=probNum+1 %>번</td>
+				<td>
+					<div><%=problemList.get(probNum).getProblem_text() %>&nbsp;&nbsp;<input type="checkbox"  class="probChk"></div>
+					<div><input type="radio" name="problem<%=problemList.get(probNum).getProblem_id()%>" value="1"><%=problemList.get(0).getAns_1() %></div>
+					<div><input type="radio" name="problem<%=problemList.get(probNum).getProblem_id()%>" value="2"><%=problemList.get(0).getAns_2() %></div>
+					<div><input type="radio" name="problem<%=problemList.get(probNum).getProblem_id()%>" value="3"><%=problemList.get(0).getAns_3() %></div>
+					<div><input type="radio" name="problem<%=problemList.get(probNum).getProblem_id()%>" value="4"><%=problemList.get(0).getAns_4() %></div>
+					<div class="haeseol"><%=problemList.get(probNum).getHaeseol() %></div>
+				</td>
+			</tr>
+			<% } %>
 		</tbody>
     </table>
     
 </div>
-<div class="rightcolumn">
-			<div class="card">
-				<h3>정답확인</h3>0
-				<div class="fakeimg">
-					<table>
-						<tbody>
-							<c:forEach items="${problemList}" var="list">
-								<tr>
-									<td>1<input type="radio" name="answer${list.problem_id}" value="1"></td>
-									<td>2<input type="radio" name="answer${list.problem_id}" value="2"></td>
-									<td>3<input type="radio" name="answer${list.problem_id}" value="3"></td>
-									<td>4<input type="radio" name="answer${list.problem_id}" value="4"></td>
-								</tr>
-							</c:forEach>
-						</tbody>
-					</table>
-				</div>
-				<div class="fakeimg"></div>
-			</div>
-			</div>
+
 	<div class="row">
-		<div class="leftcolumn">
-			<div class="card">
-			<table id="foo-table" class="table table-bordered">
-				<thead>
-			<tr>
-			<th>문제</th>
-			</tr>
-		</thead>
-				<tbody>
-				<c:forEach items="${problemList}" var="list">
-					<tr>
-					<td>
-					<div>${list.problem_image}</div>
-					<div>${list.problem_text}</div>
-					<div>
-						<input type="radio" name="problem${list.problem_id}" value="1">${list.ans_1}</div>
-					<div>
-						<input type="radio" name="problem${list.problem_id}" value="2">${list.ans_2}</div>
-					<div>
-						<input type="radio" name="problem${list.problem_id}" value="3">${list.ans_3}</div>
-					<div>
-						<input type="radio" name="problem${list.problem_id}" value="4">${list.ans_4}</div>
-					<div>${list.haeseol}</div>
-					</td>
-					</tr>
-				</c:forEach>
-				</tbody>
-				</table>
-			</div>
-		</div>
 		<div class="rightcolumn">
 			<div class="card">
 				<h3>정답확인</h3>
 				<div class="fakeimg">
 					<table>
 						<tbody>
-							<c:forEach items="${problemList}" var="list">
-								<tr>
-									<td>1<input type="radio" name="answer${list.problem_id}" value="1"></td>
-									<td>2<input type="radio" name="answer${list.problem_id}" value="2"></td>
-									<td>3<input type="radio" name="answer${list.problem_id}" value="3"></td>
-									<td>4<input type="radio" name="answer${list.problem_id}" value="4"></td>
-								</tr>
-							</c:forEach>
+							<% 
+								for(ansNum=0; ansNum<problemList.size();ansNum++){
+							%>
+							<tr>
+								<td class="ansNum<%=problemList.get(ansNum).getProblem_id() %>"><b><%=ansNum+1 %>. |</b></td>
+								<td>&nbsp; 1<input type="radio" name="answer<%=problemList.get(ansNum).getProblem_id() %>" value="1"></td>
+								<td>&nbsp; 2<input type="radio" name="answer<%=problemList.get(ansNum).getProblem_id() %>" value="2"></td>
+								<td>&nbsp; 3<input type="radio" name="answer<%=problemList.get(ansNum).getProblem_id() %>" value="3"></td>
+								<td>&nbsp; 4<input type="radio" name="answer<%=problemList.get(ansNum).getProblem_id() %>" value="4"></td>
+							</tr>
+							
+							<% } %>
 						</tbody>
 					</table>
+					<br>
+					<button class="Scoring">제출</button>
 				</div>
-				<div class="fakeimg"></div>
+				<form class="scoreFrm" action="">
+						<input type="hidden" name="score">
+						<button type="submit" class="pre-submitBtn">확인</button>
+					</form>
 			</div>
 		</div>
 	</div>
