@@ -125,62 +125,55 @@ body {
  .after-Scoring{
  	visibility:hidden;
  }
- 
+
 </style>
 <link rel="stylesheet" href="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.css"/> 
 <script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
+<script src="paper.js"></script>
 <script>
-$(function(){
-	 $("#foo-table").DataTable();
-})
-<c:forEach items="${problemList}" var="list">
-$(function(){
-	$("input[name=problem${list.problem_id}]").on("change", function(){
-		for(var i=0; i<4; i++){
-			if($("input[name='problem${list.problem_id}']").eq(i).prop("checked")){
-				$("input[name='answer${list.problem_id}']").eq(i).prop("checked",true)
-			}
-		}
-	});
-	
-	$("input[name=answer${list.problem_id}]").on("change", function(){
-		for(var i=0; i<4; i++){
-			if($("input[name='answer${list.problem_id}']").eq(i).prop("checked")){
-				$("input[name='problem${list.problem_id}']").eq(i).prop("checked",true)
-			}
-		}
-	});
-});
-</c:forEach>
 <%
 ArrayList<ProblemVO> problemList = (ArrayList<ProblemVO>)request.getAttribute("problemList");
 int probNum;  //문제 번호
 int ansNum;  //오른쪽 문제번호
+int probSize = problemList.size();
 %>
+var size = <%=probSize%>;
 
-$(function(){                               //제출버튼 누르면 팝업 + 답안표시
-	$(".Scoring").on("click", function(){
-		alert("제출하시겠습니까?");
-		 <c:forEach items="${problemList}" var="list">
-			if($("[name=answer${list.problem_id}]:checked").val()==${list.ans_correct}){
-				$(".ansNum${list.problem_id}").html($(".ansNum${list.problem_id}").html()+"/O");  //답지부분에 정답표시
-				$("[name=problem${list.problem_id}]").closest("tr").children().eq(1).html($("[name=problem${list.problem_id}]").closest("tr").children().eq(1).html()+" 정답")
-			}else{
-				$(".ansNum${list.problem_id}").html($(".ansNum${list.problem_id}").html()+"/X");  //답지부분에 정답표시
-				$("[name=problem${list.problem_id}]").closest("tr").children().eq(1).html($("[name=problem${list.problem_id}]").closest("tr").children().eq(1).html()+" 오답")
-			}
-			$(".haeseol").removeClass();  //해설 나오게 함
-			$(".probChk").removeClass();  //체크버튼 나오게 함
-			$(".Scoring").removeClass().addClass("after-Scoring");  // 제출버튼 숨김
-			$(".pre-submitBtn").removeClass().addClass("submitBtn");  //확인버튼 생성
-		 </c:forEach>
+$(function(){
+	 $("#foo-table").DataTable();
+})
+$(function(){ //for문은 번호를 설정해주는 역할만 하고 이벤트시에는 안 먹음.
+	for(var i=0; i<size; i++){
+	$('input[name=problem'+i+']').on("change", function(){
+		var j= $(this).attr('name').substring(7);
+		var v =$(this).val();
+		
+		$('input:radio[name=answer'+j+']').val([v]);
+	})
+	
+	$('input[name=answer'+i+']').on("change", function(){
+		var j= $(this).attr('name').substring(6);
+		var v =$(this).val();
+		
+		$('input:radio[name=problem'+j+']').val([v]);
+	})
+	
+	}
+});
+$(function(){
+	$(".Scoring").on("click",function(){
 		
 	})
-});
+})
+	
+
+//수정중 삭제파트 1.
+</script>
+<script>
 //카운트 시간 표시.
 var SetTime = 1800;		// 최초 설정 시간(기본 : 초)
 function msg_time() {	// 1초씩 카운트
-	m = Math.floor(SetTime / 60) + "분 " + (SetTime % 60) + "초";	// 남은 시간 계산
+	var m = Math.floor(SetTime / 60) + "분 " + (SetTime % 60) + "초";	// 남은 시간 계산
 	var msg = "현재 남은 시간은 <font color='red'>" + m + "</font> 입니다.";
 	document.all.ViewTimer.innerHTML = msg;		// div 영역에 보여줌 
 	SetTime--;					// 1초씩 감소
@@ -190,7 +183,6 @@ function msg_time() {	// 1초씩 카운트
 	}
 }
 window.onload = function TimerStart(){ tid=setInterval('msg_time()',1000) };
-
 
 </script>
 </head>
@@ -212,11 +204,11 @@ window.onload = function TimerStart(){ tid=setInterval('msg_time()',1000) };
 				<td class="probNum<%=probNum %>"><%=probNum+1 %>번</td>
 				<td>
 					<div><%=problemList.get(probNum).getProblem_text() %>&nbsp;&nbsp;<input type="checkbox"  class="probChk"></div>
-					<div><input type="radio" name="problem<%=problemList.get(probNum).getProblem_id()%>" value="1"><%=problemList.get(0).getAns_1() %></div>
-					<div><input type="radio" name="problem<%=problemList.get(probNum).getProblem_id()%>" value="2"><%=problemList.get(0).getAns_2() %></div>
-					<div><input type="radio" name="problem<%=problemList.get(probNum).getProblem_id()%>" value="3"><%=problemList.get(0).getAns_3() %></div>
-					<div><input type="radio" name="problem<%=problemList.get(probNum).getProblem_id()%>" value="4"><%=problemList.get(0).getAns_4() %></div>
-					<div class="haeseol"><%=problemList.get(probNum).getHaeseol() %></div>
+					<div><input type="radio" name="problem<%=probNum%>" value="1"><%=problemList.get(0).getAns_1() %></div>
+					<div><input type="radio" name="problem<%=probNum%>" value="2"><%=problemList.get(0).getAns_2() %></div>
+					<div><input type="radio" name="problem<%=probNum%>" value="3"><%=problemList.get(0).getAns_3() %></div>
+					<div><input type="radio" name="problem<%=probNum%>" value="4"><%=problemList.get(0).getAns_4() %></div>
+					<div class="haeseol<%=probNum %>"></div>
 				</td>
 			</tr>
 			<% } %>
@@ -237,10 +229,10 @@ window.onload = function TimerStart(){ tid=setInterval('msg_time()',1000) };
 							%>
 							<tr>
 								<td class="ansNum<%=problemList.get(ansNum).getProblem_id() %>"><b><%=ansNum+1 %>. |</b></td>
-								<td>&nbsp; 1<input type="radio" name="answer<%=problemList.get(ansNum).getProblem_id() %>" value="1"></td>
-								<td>&nbsp; 2<input type="radio" name="answer<%=problemList.get(ansNum).getProblem_id() %>" value="2"></td>
-								<td>&nbsp; 3<input type="radio" name="answer<%=problemList.get(ansNum).getProblem_id() %>" value="3"></td>
-								<td>&nbsp; 4<input type="radio" name="answer<%=problemList.get(ansNum).getProblem_id() %>" value="4"></td>
+								<td>&nbsp; 1<input type="radio" name="answer<%=ansNum %>" value="1"></td>
+								<td>&nbsp; 2<input type="radio" name="answer<%=ansNum %>" value="2"></td>
+								<td>&nbsp; 3<input type="radio" name="answer<%=ansNum %>" value="3"></td>
+								<td>&nbsp; 4<input type="radio" name="answer<%=ansNum %>" value="4"></td>
 							</tr>
 							
 							<% } %>
