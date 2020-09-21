@@ -129,7 +129,6 @@ body {
 </style>
 <link rel="stylesheet" href="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.css"/> 
 <script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
-<script src="paper.js"></script>
 <script>
 <%
 ArrayList<ProblemVO> problemList = (ArrayList<ProblemVO>)request.getAttribute("problemList");
@@ -160,11 +159,6 @@ $(function(){ //for문은 번호를 설정해주는 역할만 하고 이벤트�
 	
 	}
 });
-$(function(){
-	$(".Scoring").on("click",function(){
-		
-	})
-})
 	
 
 //수정중 삭제파트 1.
@@ -204,10 +198,10 @@ window.onload = function TimerStart(){ tid=setInterval('msg_time()',1000) };
 				<td class="probNum<%=probNum %>"><%=probNum+1 %>번</td>
 				<td>
 					<div><%=problemList.get(probNum).getProblem_text() %>&nbsp;&nbsp;<input type="checkbox"  class="probChk"></div>
-					<div><input type="radio" name="problem<%=probNum%>" value="1"><%=problemList.get(0).getAns_1() %></div>
-					<div><input type="radio" name="problem<%=probNum%>" value="2"><%=problemList.get(0).getAns_2() %></div>
-					<div><input type="radio" name="problem<%=probNum%>" value="3"><%=problemList.get(0).getAns_3() %></div>
-					<div><input type="radio" name="problem<%=probNum%>" value="4"><%=problemList.get(0).getAns_4() %></div>
+					<div><input type="radio" name="problem<%=probNum%>" value="1"><%=problemList.get(probNum).getAns_1() %></div>
+					<div><input type="radio" name="problem<%=probNum%>" value="2"><%=problemList.get(probNum).getAns_2() %></div>
+					<div><input type="radio" name="problem<%=probNum%>" value="3"><%=problemList.get(probNum).getAns_3() %></div>
+					<div><input type="radio" name="problem<%=probNum%>" value="4"><%=problemList.get(probNum).getAns_4() %></div>
 					<div class="haeseol<%=probNum %>"></div>
 				</td>
 			</tr>
