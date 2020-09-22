@@ -187,7 +187,7 @@ window.onload = function TimerStart(){ tid=setInterval('msg_time()',1000) };
 	</div>
 <div class="leftcolumn">
 <table id="foo-table" class="table table-bordered">
-		
+	
 		<thead>
 			<tr><th>과목</th><th>번호</th><th>문제</th></tr>
 		</thead>
@@ -215,9 +215,11 @@ window.onload = function TimerStart(){ tid=setInterval('msg_time()',1000) };
 		<div class="rightcolumn">
 			<div class="card">
 				<h3>정답확인</h3>
+				<form class="scoreFrm" action=""> <!-- 답지 제출 폼 -->
 				<div class="fakeimg">
 					<table>
 						<tbody>
+						
 							<% 
 								for(ansNum=0; ansNum<problemList.size();ansNum++){
 							%>
@@ -230,15 +232,12 @@ window.onload = function TimerStart(){ tid=setInterval('msg_time()',1000) };
 							</tr>
 							
 							<% } %>
+							
 						</tbody>
 					</table>
-					<br>
-					<button class="Scoring">제출</button>
+					<input type="submit" class="Scoring" value="제출">
 				</div>
-				<form class="scoreFrm" action="">
-						<input type="hidden" name="score">
-						<button type="submit" class="pre-submitBtn">확인</button>
-					</form>
+			</form>				
 			</div>
 		</div>
 	</div>
